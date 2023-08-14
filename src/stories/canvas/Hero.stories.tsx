@@ -17,7 +17,7 @@ const BASE_PROPS: Omit<HeroProps, 'component'> = {
   title: 'Are developers stuck with outdated tech and custom code to maintain?',
   titleStyle: 'h2',
   description:
-    'Use this paragraph to share information about your company or brand. Make it as engaging as possible, and showcase your brand`s unique personality.',
+    "Use this paragraph to share information about your company or brand. Make it as engaging as possible, and showcase your brand's unique personality.",
   primaryButtonCopy: 'Home',
   primaryButtonLink: {
     path: '/',
@@ -77,12 +77,24 @@ export const ImageRight: Story = {
   render: renderStory,
 };
 
-export const BackgroundImage: Story = {
+export const BackgroundDarkImage: Story = {
   args: {
     ...BASE_PROPS,
     component: {
       type: 'hero',
-      variant: HeroVariant.BackgroundImage,
+      variant: HeroVariant.BackgroundDarkImage,
+    },
+  },
+  argTypes,
+  render: renderStory,
+};
+
+export const BackgroundLightImage: Story = {
+  args: {
+    ...BASE_PROPS,
+    component: {
+      type: 'hero',
+      variant: HeroVariant.BackgroundLightImage,
     },
   },
   argTypes,
