@@ -1,9 +1,15 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
-import { ComponentProps, registerUniformComponent, UniformText } from '@uniformdev/canvas-react';
+import {
+  ComponentProps,
+  registerUniformComponent,
+  UniformText,
+  useUniformCurrentComposition,
+} from '@uniformdev/canvas-react';
 import Button from '@/components/Button';
 import { getImageUrl } from '@/utils';
+import { getLineClampClass } from '@/utils/styling';
 
 type BadgeStyles = 'primary' | 'secondary' | 'accent' | 'outline';
 
@@ -16,9 +22,11 @@ export type Props = ComponentProps<{
   badgeSize: BadgeSize;
   title: string;
   description: string;
+  slug?: string;
   buttonCopy: string;
   buttonLink: Types.ProjectMapLink;
   buttonStyle: Types.ButtonStyles;
+  lineCountRestriction: Types.AvailableMaxLineCount;
 }>;
 
 export enum CardVariants {
@@ -84,20 +92,20 @@ const getImageSizeClassName = (variantId?: string) => {
 
 const Card: FC<Props> = ({
   image,
-  badge,
+  slug = '',
   badgeSize = 'md',
   badgeStyle = 'secondary',
-  description,
-  buttonCopy,
   buttonLink,
   buttonStyle,
+  lineCountRestriction,
   component: { variant } = {},
 }) => {
   const imageUrl = getImageUrl(image);
+  const { isContextualEditing } = useUniformCurrentComposition();
   return (
     <div
       className={classNames(
-        'card w-96 max-w-full min-h-96 shadow-xl my-2 mx-0 md:m-2 relative',
+        'card w-96 max-w-full min-h-96 my-2 mx-0 md:m-2 relative border border-gray-200',
         getContentClass(variant)
       )}
     >
@@ -116,18 +124,37 @@ const Card: FC<Props> = ({
         )}
       </figure>
       <div className="card-body">
-        {Boolean(badge) && (
-          <UniformText
-            parameterId="badge"
-            as="div"
-            className={classNames('badge', getBadgeStyleClass(badgeStyle), getBadgeSizeClass(badgeSize))}
-          />
-        )}
-        <UniformText parameterId="title" as="h2" className={classNames('card-title', getTextClass(variant))} />
-        {Boolean(description) && <UniformText parameterId="description" as="p" className={getTextClass(variant)} />}
-        <div className="card-actions justify-end">
-          {Boolean(buttonCopy && buttonLink?.path) && (
-            <Button href={buttonLink?.path} style={buttonStyle} copy={<UniformText parameterId="buttonCopy" />} />
+        <UniformText
+          placeholder="Badge goes here"
+          parameterId="badge"
+          as="div"
+          className={classNames('badge', getBadgeStyleClass(badgeStyle), getBadgeSizeClass(badgeSize))}
+        />
+        <UniformText
+          placeholder="Title goes here"
+          parameterId="title"
+          as="h2"
+          className={classNames('card-title', getTextClass(variant))}
+        />
+        <UniformText
+          placeholder="Description goes here"
+          parameterId="description"
+          className={classNames(getLineClampClass(lineCountRestriction), getTextClass(variant))}
+          render={(value = '') => <div dangerouslySetInnerHTML={{ __html: value }} />}
+        />
+        <div className="card-actions justify-end mt-auto">
+          {Boolean(buttonLink?.path) && (
+            <Button
+              href={`${buttonLink.path}${slug ? `/${slug}` : ''}`}
+              style={buttonStyle}
+              copy={
+                <UniformText
+                  placeholder="Button copy goes here"
+                  parameterId="buttonCopy"
+                  onClick={isContextualEditing ? e => e.preventDefault() : undefined}
+                />
+              }
+            />
           )}
         </div>
       </div>
