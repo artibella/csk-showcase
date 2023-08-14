@@ -20,6 +20,8 @@
     "uniform:pull:datatype": "uniform canvas datatype pull ./content/baseline.json",
     "uniform:pull:components": "uniform canvas component pull ./content/baseline.json",
     "uniform:pull:compositions": "uniform canvas composition pull ./content/baseline.json",
+    "uniform:backup:compositions": "uniform canvas composition pull ./content/backup.json",
+    "uniform:restore:compositions": "uniform canvas composition push -m createOrUpdate ./content/backup.json",
     "uniform:pull:project-map-definitions": "uniform project-map definition pull ./content/baseline.json",
     "uniform:pull:project-map-nodes": "uniform project-map node pull ./content/baseline.json",
     "uniform:pull": "run-s uniform:pull:components uniform:pull:compositions uniform:pull:project-map-definitions uniform:pull:project-map-nodes",
